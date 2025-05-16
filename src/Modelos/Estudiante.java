@@ -1,73 +1,64 @@
-package Modelos;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Estudiante {
+	public enum Estado { CREADO, EN_SEGUIMIENTO, FINALIZADO, ELIMINADO }
+
 	private String cedula;
 	private String nombre;
-	private String email;
-	private EstadoEstudiante estado;
-	private List<Archivo> informesMedicos;
+	private LocalDate fechaNacimiento;
+	private Estado estado;
+	private List<Archivo> archivos;
 
-	public Estudiante(String cedula, String nombre, String email) {
+	public Estudiante(String cedula, String nombre, LocalDate fechaNacimiento) {
 		this.cedula = cedula;
 		this.nombre = nombre;
-		this.email = email;
-		this.estado = EstadoEstudiante.CREADO;
-		this.informesMedicos = new ArrayList<>();
+		this.fechaNacimiento = fechaNacimiento;
+		this.estado = Estado.CREADO;
+		this.archivos = new ArrayList<>();
 	}
 
-	// Getters y Setters
+	// Sobrecarga para modificar info
+	public void modificarInfo(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void modificarInfo(String nombre, LocalDate fechaNacimiento) {
+		this.nombre = nombre;
+		this.fechaNacimiento = fechaNacimiento;
+	}
+
+	public void agregarArchivo(Archivo archivo) {
+		String tipo = archivo.getTipo();
+		if (!tipo.equals("jpg") && !tipo.equals("png") && !tipo.equals("pdf")) {
+			throw new IllegalArgumentException("Formato de archivo no soportado");
+		}
+		archivos.add(archivo);
+	}
+
+	public void darDeBaja() {
+		this.estado = Estado.ELIMINADO;
+	}
+
+	public List<Archivo> getArchivos() {
+		return archivos;
+	}
 
 	public String getCedula() {
 		return cedula;
-	}
-
-	public void setCedula(String cedula) {
-		this.cedula = cedula;
 	}
 
 	public String getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public EstadoEstudiante getEstado() {
+	public Estado getEstado() {
 		return estado;
-	}
-
-	public void setEstado(EstadoEstudiante estado) {
-		this.estado = estado;
-	}
-
-	public List<Archivo> getInformesMedicos() {
-		return informesMedicos;
-	}
-
-	public void agregarInformeMedico(Archivo archivo) {
-		this.informesMedicos.add(archivo);
 	}
 
 	@Override
 	public String toString() {
-		return "Estudiante{" +
-				"cedula='" + cedula + '\'' +
-				", nombre='" + nombre + '\'' +
-				", email='" + email + '\'' +
-				", estado=" + estado +
-				", informesMedicos=" + informesMedicos.size() +
-				'}';
+		return "Estudiante " + nombre + " (CI: " + cedula + ") - Estado: " + estado;
 	}
 }

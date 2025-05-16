@@ -1,38 +1,41 @@
-package Modelos;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Archivo {
-	private String nombre;
-	private String tipo; // "jpg", "png", "pdf"
-	private byte[] contenido;
+public abstract class Usuario {
+	protected String cedula;
+	protected String nombre;
+	protected String email;
+	protected String rol;
+	protected Set<String> permisos;
+	protected String contrasenaHash;
 
-	public Archivo(String nombre, String tipo, byte[] contenido) {
+	public Usuario(String cedula, String nombre, String email, String rol) {
+		this.cedula = cedula;
 		this.nombre = nombre;
-		this.tipo = tipo;
-		this.contenido = contenido;
+		this.email = email;
+		this.rol = rol;
+		this.permisos = new HashSet<>();
 	}
 
-	// Getters y setters
-	public String getNombre() {
-		return nombre;
+	public void asignarPermiso(String permiso) {
+		permisos.add(permiso);
 	}
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	public void removerPermiso(String permiso) {
+		permisos.remove(permiso);
 	}
 
-	public String getTipo() {
-		return tipo;
+	public boolean verificarPermiso(String permiso) {
+		return permisos.contains(permiso);
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void establecerContrasena(String contrasena) {
+		this.contrasenaHash = Integer.toString(contrasena.hashCode());
 	}
 
-	public byte[] getContenido() {
-		return contenido;
+	public boolean verificarContrasena(String contrasena) {
+		return this.contrasenaHash.equals(Integer.toString(contrasena.hashCode()));
 	}
 
-	public void setContenido(byte[] contenido) {
-		this.contenido = contenido;
-	}
+	public abstract String mostrarInfo();
 }

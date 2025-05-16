@@ -1,72 +1,42 @@
-package Modelos;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Instancia {
-	private String id;
-	private Estudiante estudiante;
-	private LocalDateTime fechaInicio;
-	private LocalDateTime fechaFin;
-	private EstadoInstancia estado;
+public class Instancia implements Cloneable {
+	public enum Estado { CREADO, ELIMINADO }
 
-	public Instancia(Estudiante estudiante, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+	protected String id;
+	protected Estudiante estudiante;
+	protected LocalDateTime fechaInicio;
+	protected LocalDateTime fechaFin;
+	protected String descripcion;
+	protected Estado estado;
+
+	public Instancia(Estudiante estudiante, LocalDateTime fechaInicio, LocalDateTime fechaFin, String descripcion) {
 		this.id = UUID.randomUUID().toString();
 		this.estudiante = estudiante;
 		this.fechaInicio = fechaInicio;
 		this.fechaFin = fechaFin;
-		this.estado = EstadoInstancia.CREADO;
+		this.descripcion = descripcion;
+		this.estado = Estado.CREADO;
 	}
 
-	// Getters y setters
-	public String getId() {
-		return id;
+	public void modificar(LocalDateTime fechaInicio, LocalDateTime fechaFin, String descripcion) {
+		if (fechaInicio != null) this.fechaInicio = fechaInicio;
+		if (fechaFin != null) this.fechaFin = fechaFin;
+		if (descripcion != null) this.descripcion = descripcion;
 	}
 
-	public Estudiante getEstudiante() {
-		return estudiante;
+	public void eliminar() {
+		this.estado = Estado.ELIMINADO;
 	}
 
-	public void setEstudiante(Estudiante estudiante) {
-		this.estudiante = estudiante;
-	}
-
-	public LocalDateTime getFechaInicio() {
-		return fechaInicio;
-	}
-
-	public void setFechaInicio(LocalDateTime fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
-
-	public LocalDateTime getFechaFin() {
-		return fechaFin;
-	}
-
-	public void setFechaFin(LocalDateTime fechaFin) {
-		this.fechaFin = fechaFin;
-	}
-
-	public EstadoInstancia getEstado() {
-		return estado;
-	}
-
-	public void setEstado(EstadoInstancia estado) {
-		this.estado = estado;
-	}
-
-	public Instancia clonar() {
-		return new Instancia(this.estudiante, this.fechaInicio, this.fechaFin);
+	@Override
+	public Instancia clone() {
+		return new Instancia(this.estudiante, this.fechaInicio, this.fechaFin, this.descripcion);
 	}
 
 	@Override
 	public String toString() {
-		return "Instancia{" +
-				"id='" + id + '\'' +
-				", estudiante=" + estudiante.getNombre() +
-				", fechaInicio=" + fechaInicio +
-				", fechaFin=" + fechaFin +
-				", estado=" + estado +
-				'}';
+		return "Instancia " + id + " para " + estudiante.getNombre() + " desde " + fechaInicio + " a " + fechaFin;
 	}
 }
